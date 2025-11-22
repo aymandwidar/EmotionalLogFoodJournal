@@ -10,7 +10,14 @@ export class ChatService {
     }
 
     async sendMessage(userMessage) {
-        if (!this.analysisService.apiKey) throw new Error("API_KEY_MISSING");
+        // Check for API key based on selected provider
+        const apiKey = this.analysisService.provider === 'claude'
+            ? this.analysisService.claudeApiKey
+            : this.analysisService.geminiApiKey;
+
+        if (!apiKey) {
+            throw new Error("API_KEY_MISSING");
+        }
 
         // Get recent context (last 10 logs)
         const logs = this.storageService.getLogs().slice(0, 10);
@@ -39,10 +46,10 @@ export class ChatService {
             }]
         };
 
-        const apiUrl = `${this.analysisService.baseUrl}${this.analysisService.model}:generateContent`;
+        const apiUrl = `${this.analysisService.geminiBaseUrl}${this.analysisService.geminiModel}:generateContent`;
 
         try {
-            const response = await fetch(`${apiUrl}?key=${this.analysisService.apiKey}`, {
+            const response = await fetch(`${apiUrl}?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody)
