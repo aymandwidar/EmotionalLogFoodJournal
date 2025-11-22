@@ -1,0 +1,23 @@
+{
+  "name": "NutriMood V5S",
+  "short_name": "NutriMood",
+  "version": "5.0.0",
+  "description": "AI-powered food and mood tracking with Claude Sonnet 4.5",
+  "start_url": "/EmotionalLogFoodJournal/v5_deploy/",
+  "scope": "/EmotionalLogFoodJournal/v5_deploy/",
+  "display": "standalone",
+  "background_color": "#0f0f13",
+  "theme_color": "#6c5ce7",
+  "icons": [
+    {
+      "src": "/EmotionalLogFoodJournal/v5_deploy/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/EmotionalLogFoodJournal/v5_deploy/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
