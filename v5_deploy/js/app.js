@@ -445,14 +445,52 @@ export default class App {
 
             const result = await this.analysisService.parseVoiceLog(text);
 
-            // Generate AI image
+            // Show results first (without image)
+            this.showAnalysisResults(result, null);
+
+            // Generate AI image with loading indicator
             const encodedFood = encodeURIComponent(result.name + ' food photorealistic');
             const imageUrl = `https://image.pollinations.ai/prompt/${encodedFood}?width=800&height=800&nologo=true`;
 
             this.state.currentAnalysis = result;
             this.state.currentImage = imageUrl;
 
-            this.showAnalysisResults(result, imageUrl);
+            // Show "Generating image..." text
+            if (this.previewImg) {
+                this.previewImg.style.display = 'block';
+                this.previewImg.alt = 'Generating AI image...';
+                this.previewImg.style.opacity = '0.5';
+
+                // Create loading text overlay
+                const loadingText = document.createElement('div');
+                loadingText.id = 'image-loading-text';
+                loadingText.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 14px; text-align: center; z-index: 10; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 8px;';
+                loadingText.innerHTML = '🎨 Generating AI image...<br><span style="font-size: 12px; opacity: 0.8;">This may take 10-15 seconds</span>';
+
+                const container = this.previewImg.parentElement;
+                if (container && !document.getElementById('image-loading-text')) {
+                    container.style.position = 'relative';
+                    container.appendChild(loadingText);
+                }
+
+                // Load the image
+                const img = new Image();
+                img.onload = () => {
+                    this.previewImg.src = imageUrl;
+                    this.previewImg.style.opacity = '1';
+                    this.previewImg.alt = result.name;
+                    const loadingEl = document.getElementById('image-loading-text');
+                    if (loadingEl) loadingEl.remove();
+                };
+                img.onerror = () => {
+                    const loadingEl = document.getElementById('image-loading-text');
+                    if (loadingEl) {
+                        loadingEl.innerHTML = '⚠️ Image failed to load';
+                        setTimeout(() => loadingEl.remove(), 2000);
+                    }
+                };
+                img.src = imageUrl;
+            }
         } catch (error) {
             console.error('Voice analysis failed:', error);
             alert(`❌ Voice Analysis Failed: ${error.message}`);
