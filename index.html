@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriMood - AI Food & Mood Journal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f0f13">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>NutriMood</h1>
+            <div class="header-actions">
+                <button id="report-btn" class="icon-btn" aria-label="View Report">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-280h80v-280h-80v280Zm160 0h80v-400h-80v400Zm160 0h80v-160h-80v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg>
+                </button>
+                <button id="history-btn" class="icon-btn" aria-label="View History">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm-40-240h160v-80H480v-160h-80v200q0 17 11.5 28.5T440-400Zm40-80Z" />
+                    </svg>
+                </button>
+                <button id="settings-btn" class="icon-btn" aria-label="Settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-120q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-480q0-75 28.5-140.5t77-114q48.5-48.5 114-77T480-840q82 0 155.5 35T760-706v-94h80v240H600v-80h110q-41-56-101-88t-129-32q-117 0-198.5 81.5T200-480q0 117 81.5 198.5T480-200q105 0 183.5-68T756-440h82q-15 137-117.5 228.5T480-120Zm0-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Settings</h3>
+                <p>Enter your Google Gemini API Key to enable real AI analysis.</p>
+                <select id="model-select"
+                    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; margin-bottom: 12px; font-family: var(--font-main);">
+                    <option value="gemini-flash-latest">gemini-flash-latest (Recommended)</option>
+                    <option value="gemini-2.0-flash">gemini-2.0-flash (New)</option>
+                    <option value="gemini-pro-latest">gemini-pro-latest</option>
+                    <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+                </select>
+                <input type="password" id="api-key-input" placeholder="Paste API Key here">
+                <div class="modal-actions">
+                    <button id="check-conn-btn" class="secondary-btn small-btn"
+                        style="border-color: var(--success); color: var(--success);">Check Connection</button>
+                    <button id="save-key-btn" class="primary-btn small-btn">Save</button>
+                    <button id="close-settings-btn" class="secondary-btn small-btn">Cancel</button>
+                </div>
+                <p class="tiny-text"><a href="https://aistudio.google.com/app/apikey" target="_blank">Get a free key
+                        here</a></p>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Hero / Home View -->
+            <section id="home-view" class="view active">
+                <div class="hero-content">
+                    <h2>Track your food.<br>Understand your mood.</h2>
+                    <p>AI-powered nutrition tracking with emotional context.</p>
+                </div>
+                <div class="action-area">
+                    <label for="file-input" id="scan-btn" class="primary-btn pulse">
+                        <span class="icon">📸</span> Scan Food
+                    </label>
+                    <input type="file" id="file-input" accept="image/*" class="hidden-input"
+                        onchange="if(window.app) window.app.handleFileUpload(event); else alert('App not ready');">
+                </div>
+            </section>
+
+            <!-- Analysis View -->
+            <section id="analysis-view" class="view hidden">
+                <div class="loader-container">
+                    <div class="scanner-animation"></div>
+                    <p>Analyzing your meal...</p>
+                </div>
+                <div id="analysis-results" class="results-card hidden">
+                    <img id="preview-img" src="" alt="Food Preview">
+                    <div class="food-info">
+                        <h3 id="food-name">Detected Food</h3>
+                        <div class="macros">
+                            <div class="macro-item"><span id="calories">0</span> <small>kcal</small></div>
+                            <div class="macro-item"><span id="protein">0g</span> <small>Protein</small></div>
+                            <div class="macro-item"><span id="carbs">0g</span> <small>Carbs</small></div>
+                            <div class="macro-item"><span id="fats">0g</span> <small>Fats</small></div>
+                        </div>
+                    </div>
+                    <button id="confirm-food-btn" class="secondary-btn">This looks right</button>
+                </div>
+            </section>
+
+            <!-- Mood Selector View -->
+            <section id="mood-view" class="view hidden">
+                <h3>How do you feel?</h3>
+                <p>Select your state after eating</p>
+                <div class="mood-grid">
+                    <button class="mood-btn" data-mood="Very Bad" data-color="#ff4b4b">
+                        <span class="emoji">😫</span>
+                        <span class="label">Very Bad</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Bad" data-color="#ff9f43">
+                        <span class="emoji">😕</span>
+                        <span class="label">Bad</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Neutral" data-color="#feca57">
+                        <span class="emoji">😐</span>
+                        <span class="label">Neutral</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Good" data-color="#54a0ff">
+                        <span class="emoji">🙂</span>
+                        <span class="label">Good</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Feel OK" data-color="#1dd1a1">
+                        <span class="emoji">🥰</span>
+                        <span class="label">Feel OK</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Weekly Report View -->
+            <section id="report-view" class="view hidden">
+                <h3>Weekly Report</h3>
+                <div class="report-card">
+                    <div class="stat-row">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Calories</span>
+                            <span id="total-cals" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Daily Avg</span>
+                            <span id="avg-cals" class="stat-value">0</span>
+                        </div>
+                    </div>
+
+                    <h4>Mood Distribution</h4>
+                    <div id="mood-chart" class="mood-chart">
+                        <!-- Bars injected here -->
+                    </div>
+                </div>
+
+                <div class="debug-actions">
+                    <button id="generate-data-btn" class="secondary-btn small-btn">🎲 Generate Test Data</button>
+                </div>
+
+                <button id="back-home-report-btn" class="secondary-btn">Back to Home</button>
+            </section>
+
+            <!-- History View -->
+            <section id="history-view" class="view hidden">
+                <h3>Your Journal</h3>
+                <div id="history-list" class="history-list">
+                    <!-- History items will be injected here -->
+                    <div class="empty-state">No logs yet. Start scanning!</div>
+                </div>
+                <button id="back-home-btn" class="secondary-btn">Back to Home</button>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

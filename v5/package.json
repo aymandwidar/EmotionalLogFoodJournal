@@ -1,0 +1,33 @@
+{
+    "name": "nutrimood-v5s",
+    "version": "5.0.0",
+    "description": "NutriMood V5S - AI Food & Mood Journal with Claude Sonnet 4.5",
+    "type": "module",
+    "scripts": {
+        "dev": "npx http-server -p 8080 -c-1",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:integration": "jest --testPathPattern=integration",
+        "test:e2e": "playwright test",
+        "test:coverage": "jest --coverage",
+        "test:ci": "jest --ci --coverage && playwright test"
+    },
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "@testing-library/dom": "^9.3.0",
+        "@testing-library/jest-dom": "^6.1.0",
+        "@playwright/test": "^1.40.0",
+        "jest-environment-jsdom": "^29.7.0",
+        "http-server": "^14.1.1"
+    },
+    "keywords": [
+        "food-tracking",
+        "mood-tracking",
+        "ai",
+        "claude",
+        "health",
+        "nutrition"
+    ],
+    "author": "",
+    "license": "MIT"
+}
