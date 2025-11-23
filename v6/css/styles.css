@@ -42,7 +42,7 @@ body {
 
 /* Header */
 .app-header {
-    padding: 20px;
+    padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -50,7 +50,7 @@ body {
 }
 
 .app-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
     background-clip: text;
@@ -63,7 +63,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
+    padding: 5px;
     border-radius: 50%;
     transition: background 0.3s;
 }
@@ -520,7 +520,7 @@ body {
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 2px;
 }
 
 /* Mobile-friendly hidden input */
@@ -678,6 +678,7 @@ body {
 .hidden {
     display: none !important;
 }
+
 /* V6: Goals & Achievements Styles */
 
 /* Goals View */
@@ -911,9 +912,11 @@ body {
         transform: scale(0.8) rotate(-10deg);
         opacity: 0;
     }
+
     50% {
         transform: scale(1.1) rotate(5deg);
     }
+
     100% {
         transform: scale(1) rotate(0deg);
         opacity: 1;
