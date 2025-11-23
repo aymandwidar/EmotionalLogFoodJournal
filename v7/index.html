@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriMood V7 - Health-Integrated Food & Mood Journal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0f1e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1 id="app-logo" style="cursor: pointer;">NutriMood</h1>
+            <div class="header-actions">
+                <button id="biometrics-btn" class="icon-btn" aria-label="Biometrics" title="Health Data">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+                    </svg>
+                </button>
+                <button id="export-btn" class="icon-btn" aria-label="Export" title="Export Data">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />
+                    </svg>
+                </button>
+                <button id="history-btn" class="icon-btn" aria-label="History" title="Journal">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
+                    </svg>
+                </button>
+                <button id="settings-btn" class="icon-btn" aria-label="Settings" title="Settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Home View -->
+            <section id="home-view" class="view active">
+                <div class="hero-content">
+                    <h2>Track Your<br><span class="gradient-text">Health Journey</span></h2>
+                    <p>Food, mood, symptoms, and biometrics—all in one place.</p>
+
+                    <div class="streak-badge">
+                        <span class="icon">🔥</span>
+                        <span class="streak-count" id="streak-count">0</span>
+                        <span>Day Streak</span>
+                    </div>
+
+                    <div class="home-actions">
+                        <!-- Scan Button -->
+                        <div style="position: relative; width: 100%;">
+                            <button id="scan-btn" class="primary-btn pulse" style="width: 100%;">
+                                <span class="icon">📸</span> Scan Food
+                            </button>
+                            <input type="file" id="file-input" accept="image/*" capture="environment"
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;">
+                        </div>
+
+                        <!-- Voice Log -->
+                        <button id="voice-btn" class="secondary-btn" style="width: 100%;">
+                            <span class="icon">🎙️</span> Voice Log
+                        </button>
+
+                        <!-- Menu Scan (NEW V7 Feature) -->
+                        <button id="menu-scan-btn" class="secondary-btn"
+                            style="width: 100%; border-color: var(--accent-color); color: var(--accent-color);">
+                            <span class="icon">🍽️</span> Scan Menu
+                        </button>
+
+                        <!-- Quick Actions Row -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%;">
+                            <button id="symptoms-btn" class="secondary-btn">
+                                😫 Symptoms
+                            </button>
+                            <button id="insights-btn" class="secondary-btn">
+                                📊 Insights
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Biometrics View (NEW V7) -->
+            <section id="biometrics-view" class="view hidden">
+                <h3>Health Data</h3>
+                <p class="text-muted mb-2">Synced from Apple Health</p>
+
+                <div id="biometrics-container">
+                    <div class="card">
+                        <h4>😴 Sleep</h4>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);"
+                            id="sleep-duration">--</div>
+                        <p class="text-muted">hours last night</p>
+                    </div>
+
+                    <div class="card">
+                        <h4>🚶 Steps</h4>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-color);" id="step-count">--
+                        </div>
+                        <p class="text-muted">steps today</p>
+                    </div>
+
+                    <div class="card">
+                        <h4>❤️ Heart Rate</h4>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--danger);" id="heart-rate">--</div>
+                        <p class="text-muted">bpm average</p>
+                    </div>
+                </div>
+
+                <button id="sync-health-btn" class="primary-btn mt-2">Sync Health Data</button>
+                <button id="back-biometrics-btn" class="secondary-btn mt-2">Back to Home</button>
+            </section>
+
+            <!-- Settings Modal -->
+            <div id="settings-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h3>⚙️ Settings</h3>
+                    <p class="text-muted mb-2">Configure your AI provider</p>
+
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">AI Provider</label>
+                    <select id="provider-select">
+                        <option value="groq">Groq (Free - Recommended)</option>
+                        <option value="gemini">Google Gemini</option>
+                        <option value="claude">Claude</option>
+                    </select>
+
+                    <label style="display: block; margin-bottom: 8px; margin-top: 16px; font-weight: 600;">API
+                        Key</label>
+                    <input type="password" id="api-key-input" placeholder="Enter your API key">
+
+                    <div style="margin-top: 24px; display: flex; gap: 12px;">
+                        <button id="save-settings-btn" class="primary-btn" style="flex: 1;">Save</button>
+                        <button id="close-settings-btn" class="secondary-btn" style="flex: 1;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
