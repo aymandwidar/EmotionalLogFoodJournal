@@ -359,6 +359,9 @@ export class AnalysisService {
             const text = responseData.content[0].text;
 
             // Parse JSON response
+            if (options.responseFormat === 'text') {
+                return text;
+            }
             const cleanJson = text.replace(/```json|```/g, '').trim();
             const result = JSON.parse(cleanJson);
 
@@ -425,6 +428,9 @@ export class AnalysisService {
             const text = responseData.candidates[0].content.parts[0].text;
 
             // Parse JSON response
+            if (options.responseFormat === 'text') {
+                return text;
+            }
             const cleanJson = text.replace(/```json|```/g, '').trim();
             const result = JSON.parse(cleanJson);
 
@@ -525,6 +531,9 @@ export class AnalysisService {
             const text = responseData.choices[0].message.content;
 
             // Parse JSON response
+            if (options.responseFormat === 'text') {
+                return text;
+            }
             const cleanJson = text.replace(/```json|```/g, '').trim();
             const result = JSON.parse(cleanJson);
 

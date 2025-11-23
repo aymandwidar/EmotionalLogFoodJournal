@@ -10,7 +10,10 @@ export class ChatService {
     }
 
     async sendMessage(userMessage) {
-        if (!this.analysisService.apiKey) throw new Error("API_KEY_MISSING");
+        // Check if any API key is available via the service
+        if (!this.analysisService.hasApiKey() && this.analysisService.provider !== 'ollama') {
+            throw new Error("API_KEY_MISSING");
+        }
 
         // Get recent context (last 10 logs)
         const logs = this.storageService.getLogs().slice(0, 10);
@@ -33,28 +36,13 @@ export class ChatService {
             If you see a clear pattern between a food and a bad mood, point it out gently but briefly.
         `;
 
-        const requestBody = {
-            contents: [{
-                parts: [{ text: systemPrompt }]
-            }]
-        };
-
-        const apiUrl = `${this.analysisService.baseUrl}${this.analysisService.model}:generateContent`;
-
         try {
-            const response = await fetch(`${apiUrl}?key=${this.analysisService.apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody)
+            const reply = await this.analysisService.analyze('text', {
+                prompt: systemPrompt
+            }, {
+                responseFormat: 'text',
+                temperature: 0.7
             });
-
-            if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.error?.message || 'API Request Failed');
-            }
-
-            const data = await response.json();
-            const reply = data.candidates[0].content.parts[0].text;
 
             this.history.push({ user: userMessage, bot: reply });
             return reply;
