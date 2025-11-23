@@ -1,8 +1,8 @@
-name: Deploy V6 and V7
+name: Deploy V6 and V7 (Safe Mode)
 
 on:
   push:
-    branches: ["v7-development"]
+    branches: ["v7-final"]
   workflow_dispatch:
 
 permissions:
@@ -18,15 +18,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout v7-final branch
         uses: actions/checkout@v4
+        with:
+          ref: v7-final
+          path: v7-source
       
-      - name: Prepare deployment structure
+      - name: Checkout v6-release branch (PROTECTED - READ ONLY)
+        uses: actions/checkout@v4
+        with:
+          ref: v6-release
+          path: v6-source
+      
+      - name: Build deployment structure
         run: |
           mkdir -p _site
-          cp -r v6/* _site/
+          # Copy V6 to root (from protected v6-release branch)
+          cp -r v6-source/v6/* _site/
+          # Copy V7 to /v7 subdirectory
           mkdir -p _site/v7
-          cp -r v7/* _site/v7/
+          cp -r v7-source/v7/* _site/v7/
+          # Verify structure
+          echo "=== Deployment Structure ==="
+          ls -la _site/
+          echo "=== V7 Directory ==="
+          ls -la _site/v7/
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
