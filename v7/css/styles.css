@@ -994,3 +994,81 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.3);
 }
+
+/* =========================================
+   V7 Specific Styles (Adapted to Purple Theme)
+   ========================================= */
+
+/* Streak Badge */
+.streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(108, 92, 231, 0.1);
+    /* Purple tint */
+    padding: 8px 20px;
+    border-radius: 30px;
+    margin: 16px 0;
+    border: 1px solid var(--glass-border);
+}
+
+.streak-badge .icon {
+    font-size: 1.5rem;
+}
+
+.streak-count {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+/* Generic Card (used in V7) */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 48px rgba(108, 92, 231, 0.15);
+}
+
+/* Biometrics View */
+#biometrics-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#biometrics-container .card {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+#biometrics-container h4 {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+/* Menu Scan Button */
+#menu-scan-btn {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+#menu-scan-btn:hover {
+    background: rgba(162, 155, 254, 0.1);
+}
+
+/* Icons */
+.icon {
+    font-size: 1.2rem;
+}
