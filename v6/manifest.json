@@ -3,19 +3,19 @@
   "short_name": "NutriMood V6",
   "version": "6.0.0",
   "description": "AI-powered food and mood tracking with goals, achievements, and intelligent coaching",
-  "start_url": "/EmotionalLogFoodJournal/v6/",
-  "scope": "/EmotionalLogFoodJournal/v6/",
+  "start_url": "/EmotionalLogFoodJournal/",
+  "scope": "/EmotionalLogFoodJournal/",
   "display": "standalone",
   "background_color": "#0f0f13",
   "theme_color": "#6c5ce7",
   "icons": [
     {
-      "src": "/EmotionalLogFoodJournal/v6/icon-192.png",
+      "src": "/EmotionalLogFoodJournal/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/EmotionalLogFoodJournal/v6/icon-512.png",
+      "src": "/EmotionalLogFoodJournal/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
