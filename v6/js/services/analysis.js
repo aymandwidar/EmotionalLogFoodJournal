@@ -1,20 +1,28 @@
 /**
- * Analysis Service - V5S
- * Unified AI service supporting both Claude Sonnet 4.5 and Google Gemini
+ * Analysis Service - V6
+ * Unified AI service supporting Claude, Gemini, and Ollama (local AI)
  * Provides food analysis, voice parsing, meal planning, and recipe generation
  */
+
+import { OllamaService } from './ollama.js';
 
 export class AnalysisService {
     constructor() {
         // Load saved preferences
         this.claudeApiKey = localStorage.getItem('claude_api_key') || '';
         this.geminiApiKey = localStorage.getItem('gemini_api_key') || '';
-        this.provider = localStorage.getItem('ai_provider') || 'claude'; // Default to Claude
-        this.geminiModel = localStorage.getItem('gemini_model') || 'gemini-1.5-flash';
+        this.groqApiKey = localStorage.getItem('groq_api_key') || '';
+        this.provider = localStorage.getItem('ai_provider') || 'groq'; // Default to Groq (best free tier)
+        this.geminiModel = localStorage.getItem('gemini_model') || 'gemini-2.0-flash';
+        this.groqModel = localStorage.getItem('groq_model') || 'llama-3.2-3b-preview';
 
         // API endpoints
         this.claudeBaseUrl = 'https://api.anthropic.com/v1';
         this.geminiBaseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
+        this.groqBaseUrl = 'https://api.groq.com/openai/v1';
+
+        // Ollama service (local AI)
+        this.ollamaService = new OllamaService();
 
         // Response cache (5 minutes TTL)
         this.cache = new Map();
@@ -39,12 +47,22 @@ export class AnalysisService {
         localStorage.setItem('gemini_model', model);
     }
 
+    setGroqApiKey(key) {
+        this.groqApiKey = key.trim();
+        localStorage.setItem('groq_api_key', this.groqApiKey);
+    }
+
+    setGroqModel(model) {
+        this.groqModel = model;
+        localStorage.setItem('groq_model', model);
+    }
+
     /**
-     * Set AI provider (claude or gemini)
+     * Set AI provider (claude, gemini, groq, or ollama)
      */
     setProvider(provider) {
-        if (!['claude', 'gemini'].includes(provider)) {
-            throw new Error('Invalid provider. Must be "claude" or "gemini"');
+        if (!['claude', 'gemini', 'groq', 'ollama'].includes(provider)) {
+            throw new Error('Invalid provider. Must be "claude", "gemini", "groq", or "ollama"');
         }
         this.provider = provider;
         localStorage.setItem('ai_provider', provider);
@@ -57,6 +75,8 @@ export class AnalysisService {
         const providers = [];
         if (this.claudeApiKey) providers.push('claude');
         if (this.geminiApiKey) providers.push('gemini');
+        if (this.groqApiKey) providers.push('groq');
+        providers.push('ollama'); // Always available if installed
         return providers;
     }
 
@@ -66,6 +86,8 @@ export class AnalysisService {
     hasApiKey() {
         if (this.provider === 'claude') return !!this.claudeApiKey;
         if (this.provider === 'gemini') return !!this.geminiApiKey;
+        if (this.provider === 'groq') return !!this.groqApiKey;
+        if (this.provider === 'ollama') return true; // Ollama doesn't need API key
         return false;
     }
 
@@ -73,6 +95,40 @@ export class AnalysisService {
      * Unified analyze method - routes to appropriate provider
      */
     async analyze(type, data, options = {}) {
+        // Try Ollama first if selected
+        if (this.provider === 'ollama') {
+            try {
+                if (type === 'image') {
+                    // Ollama doesn't support images, fall back to Gemini
+                    console.log('Ollama doesn\'t support images, using Gemini...');
+                    const originalProvider = this.provider;
+                    this.provider = 'gemini';
+                    const result = await this._analyzeWithGemini(type, data, options);
+                    this.provider = originalProvider;
+                    return result;
+                }
+                return await this._analyzeWithOllama(type, data, options);
+            } catch (error) {
+                console.error('Ollama failed:', error);
+                // Fall back to Gemini if Ollama fails
+                if (this.geminiApiKey) {
+                    console.log('Falling back to Gemini...');
+                    const originalProvider = this.provider;
+                    this.provider = 'gemini';
+                    try {
+                        const result = await this._analyzeWithGemini(type, data, options);
+                        this.provider = originalProvider;
+                        return result;
+                    } catch (fallbackError) {
+                        this.provider = originalProvider;
+                        throw fallbackError;
+                    }
+                }
+                throw error;
+            }
+        }
+
+        // Cloud AI providers
         if (!this.hasApiKey()) {
             throw new Error('API_KEY_MISSING');
         }
@@ -81,6 +137,8 @@ export class AnalysisService {
         try {
             if (this.provider === 'claude') {
                 return await this._analyzeWithClaude(type, data, options);
+            } else if (this.provider === 'groq') {
+                return await this._analyzeWithGroq(type, data, options);
             } else {
                 return await this._analyzeWithGemini(type, data, options);
             }
@@ -88,7 +146,14 @@ export class AnalysisService {
             console.error(`${this.provider} failed:`, error);
 
             // Try fallback provider
-            const fallbackProvider = this.provider === 'claude' ? 'gemini' : 'claude';
+            let fallbackProvider;
+            if (this.provider === 'groq') {
+                // Groq failed, try Gemini for images, or another Groq model for text
+                fallbackProvider = type === 'image' ? 'gemini' : 'gemini';
+            } else {
+                fallbackProvider = this.provider === 'claude' ? 'gemini' : 'groq';
+            }
+
             const hasFallback = this.getAvailableProviders().includes(fallbackProvider);
 
             if (hasFallback && options.allowFallback !== false) {
@@ -99,7 +164,9 @@ export class AnalysisService {
                 try {
                     const result = this.provider === 'claude'
                         ? await this._analyzeWithClaude(type, data, options)
-                        : await this._analyzeWithGemini(type, data, options);
+                        : this.provider === 'groq'
+                            ? await this._analyzeWithGroq(type, data, options)
+                            : await this._analyzeWithGemini(type, data, options);
 
                     this.provider = originalProvider; // Restore original
                     return result;
@@ -388,6 +455,90 @@ export class AnalysisService {
 
         const data = await response.json();
         return data.models.map(m => m.name.replace('models/', ''));
+    }
+
+    /**
+     * Ollama-specific implementation (local AI)
+     */
+    async _analyzeWithOllama(type, data, options = {}) {
+        // Ollama doesn't use cache for now (it's local and fast)
+
+        if (type === 'text') {
+            // For text-based analysis (voice logs, meal plans, etc.)
+            if (data.prompt.includes('food log')) {
+                return await this.ollamaService.parseVoiceLog(data.prompt.match(/"([^"]+)"/)?.[1] || '');
+            } else if (data.prompt.includes('meal plan')) {
+                // Extract safe foods from prompt
+                const foodsMatch = data.prompt.match(/using these safe foods: ([^.]+)/);
+                const safeFoods = foodsMatch ? foodsMatch[1].split(',').map(f => ({ name: f.trim() })) : [];
+                const daysMatch = data.prompt.match(/(\d+)-day/);
+                const days = daysMatch ? parseInt(daysMatch[1]) : 7;
+                return await this.ollamaService.generateMealPlan(safeFoods, days);
+            } else if (data.prompt.includes('shopping list')) {
+                // Extract plan from prompt
+                const planMatch = data.prompt.match(/meal plan: (\[[\s\S]*\])/);
+                const plan = planMatch ? JSON.parse(planMatch[1]) : [];
+                return await this.ollamaService.generateGroceryList(plan);
+            }
+        }
+
+        throw new Error('Unsupported operation for Ollama');
+    }
+
+    /**
+     * Groq-specific implementation (cloud AI with generous free tier)
+     */
+    async _analyzeWithGroq(type, data, options = {}) {
+        const cacheKey = `groq_${type}_${JSON.stringify(data).substring(0, 100)}`;
+        const cached = this._getFromCache(cacheKey);
+        if (cached) return cached;
+
+        // Groq uses OpenAI-compatible API
+        const messages = [{
+            role: 'user',
+            content: data.prompt
+        }];
+
+        const requestBody = {
+            model: this.groqModel,
+            messages: messages,
+            temperature: options.temperature || 0.1,
+            max_tokens: 1024
+        };
+
+        try {
+            const response = await fetch(`${this.groqBaseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.groqApiKey}`
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || 'Groq API request failed');
+            }
+
+            const responseData = await response.json();
+            const text = responseData.choices[0].message.content;
+
+            // Parse JSON response
+            const cleanJson = text.replace(/```json|```/g, '').trim();
+            const result = JSON.parse(cleanJson);
+
+            if (result.error) {
+                throw new Error(result.error);
+            }
+
+            this._saveToCache(cacheKey, result);
+            return result;
+
+        } catch (error) {
+            console.error('Groq API Error:', error);
+            throw error;
+        }
     }
 
     /**

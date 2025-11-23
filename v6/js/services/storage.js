@@ -527,7 +527,6 @@ export class StorageService {
 
         console.log('Generated random test data');
     }
-}
 
     /**
      * V6: Goals & Achievements Methods
@@ -587,11 +586,11 @@ export class StorageService {
     getUserStats() {
         const logs = this.getLogs();
         const goals = JSON.parse(localStorage.getItem('nutrimood_goals') || '[]');
-        
+
         // Calculate good mood streak
         let goodMoodStreak = 0;
         const sortedLogs = [...logs].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
+
         for (const log of sortedLogs) {
             if (log.mood?.mood === 'Feel OK' || log.mood?.mood === 'Good') {
                 goodMoodStreak++;

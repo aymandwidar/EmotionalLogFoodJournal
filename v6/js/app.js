@@ -58,6 +58,7 @@ export default class App {
             this.renderHistory();
             this.updateStreak();
             this.loadSettings();
+            this.loadDailyTip();
 
             console.log('App initialized successfully');
         } catch (e) {
@@ -108,6 +109,8 @@ export default class App {
         this.claudeApiKeyInput = document.getElementById('claude-api-key-input');
         this.geminiApiKeyInput = document.getElementById('gemini-api-key-input');
         this.geminiModelSelect = document.getElementById('gemini-model-select');
+        this.groqApiKeyInput = document.getElementById('groq-api-key-input');
+        this.groqModelSelect = document.getElementById('groq-model-select');
         this.testConnectionBtn = document.getElementById('test-connection-btn');
         this.saveSettingsBtn = document.getElementById('save-settings-btn');
         this.closeSettingsBtn = document.getElementById('close-settings-btn');
@@ -325,15 +328,19 @@ export default class App {
 
     // Settings Management
     loadSettings() {
-        const provider = this.analysisService.provider;
-        const claudeKey = this.analysisService.claudeApiKey;
-        const geminiKey = this.analysisService.geminiApiKey;
-        const geminiModel = this.analysisService.geminiModel;
+        const provider = localStorage.getItem('ai_provider') || 'groq';
+        const claudeKey = localStorage.getItem('claude_api_key') || '';
+        const geminiKey = localStorage.getItem('gemini_api_key') || '';
+        const geminiModel = localStorage.getItem('gemini_model') || 'gemini-2.0-flash';
+        const groqKey = localStorage.getItem('groq_api_key') || '';
+        const groqModel = localStorage.getItem('groq_model') || 'llama-3.2-3b-preview';
 
         if (this.providerSelect) this.providerSelect.value = provider;
         if (this.claudeApiKeyInput) this.claudeApiKeyInput.value = claudeKey;
         if (this.geminiApiKeyInput) this.geminiApiKeyInput.value = geminiKey;
         if (this.geminiModelSelect) this.geminiModelSelect.value = geminiModel;
+        if (this.groqApiKeyInput) this.groqApiKeyInput.value = groqKey;
+        if (this.groqModelSelect) this.groqModelSelect.value = groqModel;
     }
 
     openSettings() {
@@ -385,11 +392,15 @@ export default class App {
         const claudeKey = this.claudeApiKeyInput.value.trim();
         const geminiKey = this.geminiApiKeyInput.value.trim();
         const geminiModel = this.geminiModelSelect.value;
+        const groqKey = this.groqApiKeyInput.value.trim();
+        const groqModel = this.groqModelSelect.value;
 
         this.analysisService.setProvider(provider);
         this.analysisService.setClaudeApiKey(claudeKey);
         this.analysisService.setGeminiApiKey(geminiKey);
         this.analysisService.setGeminiModel(geminiModel);
+        this.analysisService.setGroqApiKey(groqKey);
+        this.analysisService.setGroqModel(groqModel);
 
         this.closeSettings();
         alert('✅ Settings saved!');
@@ -1208,6 +1219,18 @@ export default class App {
             'Feel OK': '🥰'
         };
         return emojis[mood] || '😐';
+    }
+
+    /**
+     * Load and display daily tip from AI Coach
+     */
+    loadDailyTip() {
+        const dailyTipEl = document.getElementById('daily-tip');
+        if (!dailyTipEl) return;
+
+        // Get daily tip from coach service
+        const tip = this.coachService.getDailyTip();
+        dailyTipEl.textContent = tip;
     }
 }
 
