@@ -56,6 +56,7 @@ body {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    white-space: nowrap;
 }
 
 .icon-btn {
@@ -517,6 +518,8 @@ body {
 }
 
 .header-actions {
+    display: flex;
+    align-items: center;
     gap: 8px;
 }
 
