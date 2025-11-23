@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriMood V6 - The Intelligent Food Coach</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/print.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Simple error logger for console only
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            console.error('App Error: ' + msg, error);
+            return false;
+        };
+    </script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f0f13">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1 id="app-logo" style="cursor: pointer;">NutriMood <span style="font-size: 0.5em; opacity: 0.7;">V6</span>
+            </h1>
+            <div class="header-actions">
+                <button id="report-btn" class="icon-btn" aria-label="View Report">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-280h80v-280h-80v280Zm160 0h80v-400h-80v400Zm160 0h80v-160h-80v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg>
+                </button>
+                <button id="insights-btn" class="icon-btn" aria-label="Insights">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-400h80v-240h-80v240Zm40 120q17 0 28.5-11.5T520-400q0-17-11.5-28.5T480-440q-17 0-28.5 11.5T440-400q0 17 11.5 28.5T480-360Z" />
+                    </svg>
+                </button>
+                <button id="history-btn" class="icon-btn" aria-label="View History">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm-40-240h160v-80H480v-160h-80v200q0 17 11.5 28.5T440-400Zm40-80Z" />
+                    </svg>
+                </button>
+                <button id="goals-btn" class="icon-btn" aria-label="Goals">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Zm0 200q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0-80q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
+                    </svg>
+                </button>
+                <button id="achievements-btn" class="icon-btn" aria-label="Achievements">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm-40-320h80l40-120 40 120h80l-64 48 24 72-80-60-80 60 24-72-64-48Zm40 0Z" />
+                    </svg>
+                </button>
+                <button id="settings-btn" class="icon-btn" aria-label="Settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-120q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-480q0-75 28.5-140.5t77-114q48.5-48.5 114-77T480-840q82 0 155.5 35T760-706v-94h80v240H600v-80h110q-41-56-101-88t-129-32q-117 0-198.5 81.5T200-480q0 117 81.5 198.5T480-200q105 0 183.5-68T756-440h82q-15 137-117.5 228.5T480-120Zm0-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content" style="max-width: 400px;">
+                <h3>⚙️ Settings</h3>
+                <p style="margin-bottom: 20px;">Configure your AI providers for food analysis</p>
+
+                <!-- AI Provider Selection -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">AI Provider</label>
+                    <select id="provider-select"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; font-family: var(--font-main);">
+                        <option value="claude">Claude Sonnet 4.5 (Recommended)</option>
+                        <option value="gemini">Google Gemini</option>
+                    </select>
+                </div>
+
+                <!-- Claude API Key -->
+                <div id="claude-settings" style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">🤖 Claude API Key</label>
+                    <input type="password" id="claude-api-key-input" placeholder="sk-ant-..."
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; margin-bottom: 8px; font-family: var(--font-main);">
+                    <p class="tiny-text"><a href="https://console.anthropic.com/" target="_blank">Get Claude API key
+                            →</a></p>
+                </div>
+
+                <!-- Gemini API Key -->
+                <div id="gemini-settings" style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">🔮 Gemini API Key</label>
+                    <input type="password" id="gemini-api-key-input" placeholder="AIza..."
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; margin-bottom: 8px; font-family: var(--font-main);">
+                    <select id="gemini-model-select"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; margin-bottom: 8px; font-family: var(--font-main);">
+                        <option value="gemini-1.5-flash">gemini-1.5-flash (Fast)</option>
+                        <option value="gemini-2.0-flash">gemini-2.0-flash (New)</option>
+                        <option value="gemini-pro-latest">gemini-pro-latest</option>
+                    </select>
+                    <p class="tiny-text"><a href="https://aistudio.google.com/app/apikey" target="_blank">Get Gemini API
+                            key →</a></p>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 20px;">
+                    <button id="test-connection-btn" class="secondary-btn small-btn"
+                        style="border-color: var(--success); color: var(--success);">Test Connection</button>
+                    <button id="save-settings-btn" class="primary-btn small-btn">Save</button>
+                    <button id="close-settings-btn" class="secondary-btn small-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Hero / Home View -->
+            <section id="home-view" class="view active">
+                <div class="hero-content">
+                    <h2>Track Your<br><span class="gradient-text">Food & Mood</span></h2>
+                    <p>Understand how your diet affects your mind.</p>
+
+                    <div id="streak-container"
+                        style="margin-top: 10px; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;">
+                        <span>🔥</span> <span id="streak-count" style="font-weight: bold; color: #ff7675;">0</span> Day
+                        Streak
+                    </div>
+
+                    <div class="home-actions"
+                        style="display: flex; flex-direction: column; gap: 15px; align-items: center; width: 100%;">
+                        <!-- Scan Button with Transparent Input Overlay -->
+                        <div style="position: relative; display: inline-block;">
+                            <button id="scan-btn" class="primary-btn pulse">
+                                <span class="icon">📸</span> Scan Food
+                            </button>
+                            <input type="file" id="file-input" accept="image/*" capture="environment"
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;">
+                        </div>
+
+                        <button id="voice-btn" class="secondary-btn pulse"
+                            style="border-color: var(--accent-color); color: var(--accent-color);">
+                            <span class="icon">🎙️</span> Voice Log
+                        </button>
+
+                        <button id="type-btn" class="secondary-btn"
+                            style="margin-top: 5px; font-size: 0.8rem; padding: 8px 15px;">
+                            <span class="icon">⌨️</span> Type Log
+                        </button>
+
+                        <div style="display: flex; gap: 10px; width: 100%; max-width: 300px;">
+                            <button id="home-trends-btn" class="secondary-btn" style="flex: 1; font-size: 0.9rem;">📊
+                                Trends</button>
+                            <button id="home-plan-btn" class="secondary-btn" style="flex: 1; font-size: 0.9rem;">📅
+                                Plan</button>
+                        </div>
+
+                        <label for="fridge-input" id="fridge-btn" class="secondary-btn"
+                            style="width: 100%; max-width: 300px;">
+                            <span class="icon">👨‍🍳</span> Fridge Chef
+                        </label>
+                        <input type="file" id="fridge-input" accept="image/*" class="hidden-input">
+                    </div>
+                </div>
+                <p id="voice-status" class="tiny-text hidden" style="margin-top: 10px; color: var(--accent-color);">
+                    Listening...</p>
+            </section>
+
+            <!-- Analysis View -->
+            <section id="analysis-view" class="view hidden">
+                <div class="loader-container">
+                    <div class="scanner-animation"></div>
+                    <p>Analyzing your meal...</p>
+                </div>
+                <div id="analysis-results" class="results-card hidden">
+                    <img id="preview-img" src="" alt="Food Preview">
+                    <div class="food-info">
+                        <h3 id="food-name">Detected Food</h3>
+                        <div class="macros">
+                            <div class="macro-item"><span id="calories">0</span> <small>kcal</small></div>
+                            <div class="macro-item"><span id="protein">0g</span> <small>Protein</small></div>
+                            <div class="macro-item"><span id="carbs">0g</span> <small>Carbs</small></div>
+                            <div class="macro-item"><span id="fats">0g</span> <small>Fats</small></div>
+                        </div>
+                    </div>
+                    <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button id="confirm-food-btn" class="primary-btn" style="flex: 1;">I ate this</button>
+                        <button id="cancel-food-btn" class="secondary-btn"
+                            style="flex: 1; background: rgba(255, 75, 75, 0.1); color: #ff4b4b; border-color: #ff4b4b;">Cancel</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mood Selector View -->
+            <section id="mood-view" class="view hidden">
+                <h3>How do you feel?</h3>
+                <p>Select your state after eating</p>
+                <div class="mood-grid">
+                    <button class="mood-btn" data-mood="Very Bad" data-color="#ff4b4b">
+                        <span class="emoji">😫</span>
+                        <span class="label">Very Bad</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Bad" data-color="#ff9f43">
+                        <span class="emoji">😕</span>
+                        <span class="label">Bad</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Neutral" data-color="#feca57">
+                        <span class="emoji">😐</span>
+                        <span class="label">Neutral</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Good" data-color="#54a0ff">
+                        <span class="emoji">🙂</span>
+                        <span class="label">Good</span>
+                    </button>
+                    <button class="mood-btn" data-mood="Feel OK" data-color="#1dd1a1">
+                        <span class="emoji">🥰</span>
+                        <span class="label">Feel OK</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Weekly Report View -->
+            <section id="report-view" class="view hidden">
+                <h3>Weekly Report</h3>
+                <div class="report-card">
+                    <div class="stat-row">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Calories</span>
+                            <span id="total-cals" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Daily Avg</span>
+                            <span id="avg-cals" class="stat-value">0</span>
+                        </div>
+                    </div>
+
+                    <h4>Mood Distribution</h4>
+                    <div id="mood-chart" class="mood-chart">
+                        <!-- Bars injected here -->
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 20px 0;">
+
+                    <h4>Calorie Breakdown (by Food)</h4>
+                    <div id="report-aggregated-stats" style="margin-bottom: 20px;">
+                        <!-- Aggregated stats injected here -->
+                    </div>
+
+                    <h4>Recommendations</h4>
+                    <div id="report-recommendations" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <div class="insight-card"
+                            style="flex: 1; background: rgba(29, 209, 161, 0.1); border-color: var(--success);">
+                            <h5 style="color: var(--success); margin-bottom: 10px;">Foods to Enjoy 🌟</h5>
+                            <ul id="report-good-foods" class="insight-list"></ul>
+                        </div>
+                        <div class="insight-card"
+                            style="flex: 1; background: rgba(255, 75, 75, 0.1); border-color: #ff4b4b;">
+                            <h5 style="color: #ff4b4b; margin-bottom: 10px;">Foods to Avoid ⚠️</h5>
+                            <ul id="report-bad-foods" class="insight-list"></ul>
+                        </div>
+                    </div>
+
+                    <h4>Meal Log</h4>
+                    <div id="report-meal-list" class="history-list" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Full list injected here -->
+                    </div>
+                </div>
+
+                <div class="debug-actions">
+                    <button id="export-pdf-btn" class="primary-btn small-btn" style="background: var(--success);">📄
+                        Export PDF</button>
+                    <button id="generate-data-btn" class="secondary-btn small-btn">🎲 Generate Test Data</button>
+                </div>
+
+                <button id="back-home-report-btn" class="secondary-btn">Back to Home</button>
+            </section>
+
+            <!-- History View -->
+            <section id="history-view" class="view hidden">
+                <h3>Your Journal</h3>
+                <div id="history-list" class="history-list">
+                    <!-- History items will be injected here -->
+                    <div class="empty-state">No logs yet. Start scanning!</div>
+                </div>
+                <button id="back-home-btn" class="secondary-btn">Back to Home</button>
+            </section>
+
+            <!-- Insights View -->
+            <section id="insights-view" class="view hidden">
+                <h3>Food Sensitivity Insights</h3>
+
+                <div class="insight-card trigger-card">
+                    <h4>⚠️ Potential Triggers</h4>
+                    <p class="tiny-text">Foods linked to negative moods</p>
+                    <ul id="trigger-list" class="insight-list">
+                        <!-- Items injected here -->
+                    </ul>
+                </div>
+
+                <div class="insight-card safe-card">
+                    <h4>✅ Safe Foods</h4>
+                    <p class="tiny-text">Foods linked to positive moods</p>
+                    <ul id="safe-list" class="insight-list">
+                        <!-- Items injected here -->
+                    </ul>
+                </div>
+
+                <button id="back-home-insights-btn" class="secondary-btn">Back to Home</button>
+                <button id="generate-plan-btn" class="primary-btn" style="margin-top: 10px;">📅 Generate Safe Meal
+                    Plan</button>
+            </section>
+
+            <!-- Meal Plan View -->
+            <section id="plan-view" class="view hidden">
+                <h3>7-Day Safe Meal Plan</h3>
+                <div class="loader-container" id="plan-loader">
+                    <div class="scanner-animation"></div>
+                    <p>Curating your menu...</p>
+                </div>
+                <div id="plan-container" class="hidden">
+                    <!-- Plan injected here -->
+                </div>
+                <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
+                    <button id="back-insights-plan-btn" class="secondary-btn" style="flex: 1;">Back</button>
+                    <button id="generate-list-btn" class="primary-btn" style="flex: 1;">🛒 Shop This</button>
+                </div>
+            </section>
+
+            <!-- Grocery List View -->
+            <section id="grocery-view" class="view hidden">
+                <h3>Shopping List</h3>
+                <div class="loader-container" id="grocery-loader">
+                    <div class="scanner-animation"></div>
+                    <p>Writing your list...</p>
+                </div>
+                <div id="grocery-container" class="hidden" style="width: 100%; text-align: left;">
+                    <!-- List injected here -->
+                </div>
+                <button id="back-plan-grocery-btn" class="secondary-btn" style="margin-top: 20px;">Back to Plan</button>
+            </section>
+            <!-- Trends View -->
+            <section id="trends-view" class="view hidden">
+                <h3>Nutrient Trends</h3>
+                <p class="tiny-text" style="color: var(--text-muted); margin-bottom: 20px;">Average intake per mood</p>
+
+                <div id="trends-container" style="width: 100%;">
+                    <!-- Charts injected here -->
+                </div>
+
+                <button id="back-insights-trends-btn" class="secondary-btn" style="margin-top: 20px;">Back to
+                    Insights</button>
+            </section>
+
+            <!-- Goals View -->
+            <section id="goals-view" class="view hidden">
+                <h3>🎯 Your Goals</h3>
+                <p class="tiny-text" style="color: var(--text-muted); margin-bottom: 20px;">Track your progress toward
+                    health goals</p>
+
+                <!-- Add Goal Button -->
+                <button id="add-goal-btn" class="primary-btn" style="margin-bottom: 20px; width: 100%;">
+                    <span class="icon">➕</span> Add New Goal
+                </button>
+
+                <!-- Goals Tabs -->
+                <div class="tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button id="active-goals-tab" class="tab-btn active" data-tab="active">Active</button>
+                    <button id="completed-goals-tab" class="tab-btn" data-tab="completed">Completed</button>
+                </div>
+
+                <!-- Goals Container -->
+                <div id="goals-container" style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Goal cards will be injected here -->
+                    <div class="empty-state">No goals yet. Set your first goal!</div>
+                </div>
+
+                <button id="back-home-goals-btn" class="secondary-btn" style="margin-top: 20px;">Back to Home</button>
+            </section>
+
+            <!-- Achievements View -->
+            <section id="achievements-view" class="view hidden">
+                <h3>🏆 Achievements</h3>
+                <p class="tiny-text" style="color: var(--text-muted); margin-bottom: 20px;">
+                    <span id="unlocked-count">0</span> / <span id="total-count">20</span> unlocked
+                </p>
+
+                <!-- Achievement Categories -->
+                <div class="achievement-filters"
+                    style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto;">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="streak">🔥 Streak</button>
+                    <button class="filter-btn" data-filter="volume">📝 Volume</button>
+                    <button class="filter-btn" data-filter="mood">😊 Mood</button>
+                    <button class="filter-btn" data-filter="discovery">🍽️ Discovery</button>
+                    <button class="filter-btn" data-filter="goal">🎯 Goals</button>
+                </div>
+
+                <!-- Achievements Grid -->
+                <div id="achievements-grid" class="achievements-grid">
+                    <!-- Achievement badges will be injected here -->
+                </div>
+
+                <button id="back-home-achievements-btn" class="secondary-btn" style="margin-top: 20px;">Back to
+                    Home</button>
+            </section>
+
+            <!-- Recipes View -->
+            <section id="recipes-view" class="view hidden">
+
+                <h3>Chef's Recommendations</h3>
+                <div class="loader-container" id="recipe-loader">
+                    <div class="scanner-animation"></div>
+                    <p>Dreaming up recipes...</p>
+                </div>
+                <div id="recipes-list" class="recipes-list hidden">
+                    <!-- Recipes injected here -->
+                </div>
+                <button id="back-home-recipes-btn" class="secondary-btn">Back to Home</button>
+            </section>
+        </main>
+
+        <!-- Chat Floating Button -->
+        <button id="chat-fab" class="chat-fab" aria-label="Chat with AI">
+            💬
+        </button>
+
+        <!-- Chat Modal -->
+        <div id="chat-modal" class="modal hidden">
+            <div class="modal-content chat-content">
+                <div class="chat-header">
+                    <h3>Gut Guide AI</h3>
+                    <button id="close-chat-btn" class="icon-btn">✕</button>
+                </div>
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message bot-message">Hello! I'm your personal gut health guide. Ask me anything about
+                        your food and mood patterns!</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Ask a question...">
+                    <button id="send-chat-btn" class="primary-btn small-btn">Send</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="module" src="js/app.js?v=60"></script>
+</body>
+
+</html>
+```

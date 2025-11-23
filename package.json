@@ -1,0 +1,33 @@
+{
+    "name": "nutrimood-v6",
+    "version": "6.0.0",
+    "description": "NutriMood V6 - The Intelligent Food Coach with Goals, Achievements & AI Insights",
+    "main": "index.html",
+    "type": "module",
+    "scripts": {
+        "dev": "npx http-server -p 8080 -c-1",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage",
+        "test:e2e": "playwright test"
+    },
+    "keywords": [
+        "food",
+        "mood",
+        "tracking",
+        "AI",
+        "health",
+        "goals",
+        "achievements",
+        "coach"
+    ],
+    "author": "NutriMood Team",
+    "license": "MIT",
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "@testing-library/dom": "^9.3.0",
+        "@playwright/test": "^1.40.0",
+        "jest-environment-jsdom": "^29.7.0",
+        "http-server": "^14.1.1"
+    }
+}

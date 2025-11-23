@@ -1,0 +1,23 @@
+{
+  "name": "NutriMood V7 - Health-Integrated Food Journal",
+  "short_name": "NutriMood V7",
+  "version": "7.0.0",
+  "description": "AI-powered food tracking with HealthKit integration, symptom tracking, and smart export",
+  "start_url": "/EmotionalLogFoodJournal/",
+  "scope": "/EmotionalLogFoodJournal/",
+  "display": "standalone",
+  "background_color": "#0f0f13",
+  "theme_color": "#6c5ce7",
+  "icons": [
+    {
+      "src": "/EmotionalLogFoodJournal/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/EmotionalLogFoodJournal/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

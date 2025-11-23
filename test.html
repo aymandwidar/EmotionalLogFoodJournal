@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>V6 Quick Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0f0f13;
+            color: white;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            min-height: 100px;
+        }
+
+        input {
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>NutriMood V6 - Quick Test</h1>
+
+    <h3>Test Voice Input</h3>
+    <p>Click the button below to test voice recognition:</p>
+    <button onclick="testVoice()">🎙️ Test Voice</button>
+
+    <h3>Test Text Input</h3>
+    <p>Enter text manually (bypassing prompt):</p>
+    <input type="text" id="textInput" placeholder="e.g., I had a salad and feel great"
+        value="I had a salad and feel great">
+    <button onclick="testText()">⌨️ Test Text Analysis</button>
+
+    <h3>Output:</h3>
+    <div id="output">Waiting for test...</div>
+
+    <script>
+        function log(message) {
+            document.getElementById('output').innerHTML += message + '<br>';
+        }
+
+        function testVoice() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                log('❌ Voice recognition not supported in this browser');
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                log('🎙️ Listening... Speak now!');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                log('✅ Heard: "' + transcript + '"');
+                testText(transcript);
+            };
+
+            recognition.onerror = (event) => {
+                log('❌ Voice error: ' + event.error);
+            };
+
+            recognition.onend = () => {
+                log('🎙️ Stopped listening');
+            };
+
+            try {
+                recognition.start();
+            } catch (e) {
+                log('❌ Failed to start: ' + e.message);
+            }
+        }
+
+        async function testText(text) {
+            if (!text) {
+                text = document.getElementById('textInput').value;
+            }
+
+            log('📝 Testing with: "' + text + '"');
+
+            // Check if we can access the main app
+            if (window.opener && window.opener.app) {
+                log('✅ Found main app instance');
+                try {
+                    await window.opener.app.processVoiceText(text);
+                    log('✅ Sent to main app for processing');
+                } catch (e) {
+                    log('❌ Error: ' + e.message);
+                }
+            } else {
+                log('⚠️ Main app not found. Open this from V6 app using: window.open("test.html")');
+                log('Or test the API directly:');
+
+                // Test API key
+                const apiKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('claude_api_key');
+                if (!apiKey) {
+                    log('❌ No API key found in localStorage');
+                    log('Please configure API key in main app first');
+                    return;
+                }
+
+                log('✅ API key found: ' + apiKey.substring(0, 10) + '...');
+            }
+        }
+
+        log('Ready to test! Click a button above.');
+    </script>
+</body>
+
+</html>
